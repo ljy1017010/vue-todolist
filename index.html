@@ -12,6 +12,10 @@
             color: #555;
         }
 
+        h1 {
+            font-size: 16px;
+        }
+
         .header {
             background-color: black;
             color: #fff;
@@ -21,19 +25,40 @@
         .tool {
             margin-left: 10px;
             margin-top: 10px;
-
         }
 
         .lists {
             margin-left: 10px;
-            margin-top: 10px;
-            border: solid 1px red;
+            margin-top: 20px;
         }
         ul {
             list-style: none;
+            background-color: blanchedalmond;
         }
         ul li {
+            padding: 8px;
             font-size: 14px;
+            border-bottom: solid 1px #ccc;
+            display: flex;
+            justify-content:flex-start;
+            align-items: center;
+        }
+        ul li>span.circle {
+            display: inline-block;
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            border: solid 1px #bbb;
+            margin-right: 8px;
+        }
+        li.finished span {
+            color: #bbb;
+        }
+        li.finished .circle {
+            background-color: #bbb;
+        }
+        li span.des {
+            flex: auto;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -41,19 +66,22 @@
 
 <body>
     <div id="app">
-        <h3 class='header'>todolist</h3>
+        <h1 class='header'>Todolist-VUE</h3>
 
         <div class='tool'>
             <h3>添加任务</h3>
-            <input type="text" v-modal='newItem' />
+            <input type="text" v-model='newDes' />
             <button @click='addItem'>添加</button>
         </div>
-
 
         <div class='lists'>
             <h3>任务列表</h3>
             <ul>
-                <li v-for="item in items" :key="item.id">{{item.des}}</li>
+                <li v-for="item in items" :key="item.id" @click='finishTask(item)' :class='{finished: item.isFinished}'>
+                    <span class='circle'></span>
+                    <span class='des'>{{item.des}}</span>
+                    <button @click='deleteItem(item)' v-if="item.isFinished">删除</button>
+                </li>
             </ul>
         </div>
     </div>
@@ -63,7 +91,8 @@
             el: "#app",
             data() {
                 return {
-                    newItem: '',
+                    index: 3,
+                    newDes: '',
                     items: [{
                         id: 1,
                         des: '买菜',
@@ -76,8 +105,25 @@
                 }
             },
             methods: {
-                addItem() {
-                    console.log('add..')
+                addItem () {
+                    this.items.push({
+                        id: this.index,
+                        des: this.newDes,
+                        isFinished: false
+                    })
+
+                    this.newDes = ''
+                    this.index++
+                },
+                finishTask (item) {
+                    item.isFinished = !item.isFinished
+                },
+                deleteItem (item) {
+                    this.items.forEach((v, index) => {
+                        if (v.id === item.id) {
+                            this.items.splice(index, 1)
+                        }
+                    })
                 }
             }
         });
