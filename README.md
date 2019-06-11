@@ -1,4 +1,4 @@
 # vue-todolist
 a todolist by vue
 
-<img src="vue-todolist/des.png">
+<img src="./des.jpg">
